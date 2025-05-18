@@ -1,0 +1,19 @@
+artora uyg.
+
+login/register ✅
+
+ürün ekleme ✅
+
+satışa sunulan resimler ayrı sayfa tasarlanacak ✅
+
+index.html sayfası sıfırdan düzenlenecek ✅
+
+profil.html'deki sidebar düzenlenecek✅
+
+profil.html düzenlenek ve dinamileştirelecek ✅
+
+profil.html'e satın alınan resimler ve kullanıcının satışa sunduğu resimler olacak o resimde fiyatını, açıklamasını değiştirebilecek
+
+alert kutularına(pop up'lara) animasyonlu güzel bir şey yapılacak ör:( https://www.youtube.com/watch?v=AF6vGYIyV8M )
+
+

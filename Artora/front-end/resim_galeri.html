@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resim Galerisi - Artora</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-dark">
+    <!-- Mobile Toggle Button -->
+    <button class="mobile-toggle d-md-none btn btn-dark border-0">
+        <i class="fas fa-bars fa-lg"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div class="sidebar active">
+        <a href="index.html" class="logo">
+            <img src="img/slack.svg" alt="Artora Logo">
+            <span>Artora</span>
+        </a>
+        <nav class="nav-items">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Ana Sayfa</span>
+            </a>
+            <a href="about.html" class="nav-link">
+                <i class="fas fa-info-circle"></i>
+                <span>Hakkımızda</span>
+            </a>
+            <a href="resim_galeri.html" class="nav-link active">
+                <i class="fas fa-images"></i>
+                <span>Resim Galerisi</span>
+            </a>
+            <a href="cart.html" class="nav-link">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Sepetim</span>
+            </a>
+            <a href="satin_aldiklarim.html" class="nav-link d-none" id="satinAldiklarimLink">
+                <i class="fas fa-download"></i>
+                <span>Satın Aldıklarım</span>
+            </a>
+        </nav>
+
+        <!-- User Section -->
+        <div class="user-section" id="userDropdown" style="display: none;">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-details">
+                    <div class="user-name"></div>
+                    <div class="user-role">Kullanıcı</div>
+                </div>
+            </div>
+            <div class="user-menu">
+                <a href="#" class="user-menu-item" id="profilimBtn">
+                    <i class="fas fa-user"></i>
+                    <span>Profilim</span>
+                </a>
+                <button id="logoutBtn" class="user-menu-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Çıkış Yap</span>
+                </button>
+            </div>
+            <!-- Profilim geçici uyarı kutusu -->
+            <div id="profilimAlert" class="alert alert-warning d-none mt-3 mb-0 p-2 text-center" style="font-size:0.95rem;">
+                <i class="fas fa-exclamation-triangle me-2"></i>Profilim bölümü demodan dolayı geçici olarak kullanılamıyor.
+            </div>
+        </div>
+
+        <!-- Login Section -->
+        <div id="loginSection" class="auth-section">
+            <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#authModal">
+                <i class="fas fa-sign-in-alt me-2"></i>
+                <span>Giriş Yap</span> / <span>Kayıt Ol</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container py-4">
+            <!-- Filtreler ve Resim Yükle Butonu -->
+            <div class="filters d-flex flex-wrap align-items-center gap-3 mb-4">
+                <!-- Fiyat Aralığı -->
+                <div class="d-flex align-items-center gap-2">
+                    <label for="minPrice" class="form-label mb-0 text-light">Fiyat:</label>
+                    <input type="number" id="minPrice" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Min" min="0" style="width: 80px;">
+                    <span class="text-light">-</span>
+                    <input type="number" id="maxPrice" class="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Maks" min="0" style="width: 80px;">
+                </div>
+                <!-- Sıralama -->
+                <div class="d-flex align-items-center gap-2">
+                    <label for="sortFilter" class="form-label mb-0 text-light">Sırala:</label>
+                    <select id="sortFilter" class="form-select form-select-sm bg-dark text-light border-secondary" style="width: 140px;">
+                        <option value="">Varsayılan</option>
+                        <option value="price_asc">Fiyat (Artan)</option>
+                        <option value="price_desc">Fiyat (Azalan)</option>
+                        <option value="date_desc">En Yeni</option>
+                        <option value="date_asc">En Eski</option>
+                    </select>
+                </div>
+                <!-- Sağda sabit Resim Yükle Butonu (her zaman görünür) -->
+                <div class="ms-auto">
+                    <button id="uploadButton" class="btn btn-success">
+                        <i class="fas fa-upload me-2"></i>Resim Yükle
+                    </button>
+                </div>
+            </div>
+            <!-- Galeri -->
+            <div class="gallery row g-4"></div>
+
+            <!-- Sayfalama -->
+            <nav aria-label="Sayfalama" class="mt-4">
+                <ul class="pagination justify-content-center"></ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="modal fade auth-modal" id="authModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title w-100 text-center">Hoş Geldiniz</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-pills nav-fill mb-4" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab">
+                                <i class="fas fa-sign-in-alt me-2"></i>Giriş Yap
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button" role="tab">
+                                <i class="fas fa-user-plus me-2"></i>Kayıt Ol
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab content -->
+                    <div class="tab-content">
+                        <!-- Login Tab -->
+                        <div class="tab-pane fade show active" id="login" role="tabpanel">
+                            <form id="loginForm">
+                                <div class="form-floating mb-3">
+                                    <input type="email" class="form-control" id="loginEmail" placeholder="name@example.com" required>
+                                    <label for="loginEmail">E-posta Adresiniz</label>
+                                </div>
+                                <div class="form-floating mb-3 password-field">
+                                    <input type="password" class="form-control" id="loginPassword" placeholder="Şifre" required>
+                                    <label for="loginPassword">Şifreniz</label>
+                                    <button type="button" class="password-toggle">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input type="checkbox" class="form-check-input" id="rememberMe">
+                                    <label class="form-check-label" for="rememberMe">Beni hatırla</label>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100 mb-3">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Giriş Yap
+                                </button>
+                                <div class="text-center">
+                                    <a href="#" class="text-muted" id="forgotPassword">Şifremi unuttum</a>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Register Tab -->
+                        <div class="tab-pane fade" id="register" role="tabpanel">
+                            <form id="registerForm">
+                                <div class="row g-3 mb-3">
+                                    <div class="col-6">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" id="firstName" placeholder="Ad" required>
+                                            <label for="firstName">Adınız</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" id="lastName" placeholder="Soyad" required>
+                                            <label for="lastName">Soyadınız</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="email" class="form-control" id="registerEmail" placeholder="name@example.com" required>
+                                    <label for="registerEmail">E-posta Adresiniz</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="username" placeholder="Kullanıcı adı" required>
+                                    <label for="username">Kullanıcı Adınız</label>
+                                </div>
+                                <div class="form-floating mb-3 password-field">
+                                    <input type="password" class="form-control" id="registerPassword" placeholder="Şifre" required>
+                                    <label for="registerPassword">Şifreniz</label>
+                                    <button type="button" class="password-toggle">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <div class="password-strength">
+                                        <div class="password-strength-bar"></div>
+                                    </div>
+                                </div>
+                                <div class="form-floating mb-3 password-field">
+                                    <input type="password" class="form-control" id="confirmPassword" placeholder="Şifre tekrar" required>
+                                    <label for="confirmPassword">Şifrenizi Tekrar Girin</label>
+                                    <button type="button" class="password-toggle">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input type="checkbox" class="form-check-input" id="terms" required>
+                                    <label class="form-check-label" for="terms">
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Kullanım şartlarını</a> kabul ediyorum
+                                    </label>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-user-plus me-2"></i>Kayıt Ol
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resim Önizleme Modal -->
+    <div class="modal fade" id="imagePreviewModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content bg-dark">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-light" id="previewTitle"></h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center p-0">
+                    <img id="previewImage" class="img-fluid" alt="Resim Önizleme">
+                </div>
+                <div class="modal-footer border-0">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <div class="text-light">
+                            <div id="previewPrice" class="h4 mb-1"></div>
+                            <small id="previewCategory" class="text-muted"></small>
+                        </div>
+                        <button id="addToCartBtn" class="btn btn-primary">
+                            <i class="fas fa-cart-plus me-2"></i>Sepete Ekle
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detay Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-light">
+                <!-- Modal içeriği dinamik olarak doldurulacak -->
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="resim_galeri.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sidebar'da Satın Aldıklarım linkini sadece giriş yapan kullanıcılar görebilsin
+        const satinAldiklarimLink = document.getElementById('satinAldiklarimLink');
+        function toggleSatinAldiklarimLink() {
+            const token = localStorage.getItem('token');
+            if (satinAldiklarimLink) {
+                if (token) {
+                    satinAldiklarimLink.classList.remove('d-none');
+                } else {
+                    satinAldiklarimLink.classList.add('d-none');
+                }
+            }
+        }
+        toggleSatinAldiklarimLink();
+        window.addEventListener('storage', toggleSatinAldiklarimLink);
+    </script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resim Yükle - Artora</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-dark">
+    <!-- Mobile Toggle Button -->
+    <button class="mobile-toggle d-md-none btn btn-dark border-0">
+        <i class="fas fa-bars fa-lg"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div class="sidebar active">
+        <a href="index.html" class="logo">
+            <img src="img/slack.svg" alt="Artora Logo">
+            <span>Artora</span>
+        </a>
+        <nav class="nav-items">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Ana Sayfa</span>
+            </a>
+            <a href="about.html" class="nav-link">
+                <i class="fas fa-info-circle"></i>
+                <span>Hakkımızda</span>
+            </a>
+            <a href="resim_galeri.html" class="nav-link">
+                <i class="fas fa-images"></i>
+                <span>Resim Galerisi</span>
+            </a>
+            <a href="cart.html" class="nav-link">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Sepetim</span>
+            </a>
+            <a href="satin_aldiklarim.html" class="nav-link d-none" id="satinAldiklarimLink">
+                <i class="fas fa-download"></i>
+                <span>Satın Aldıklarım</span>
+            </a>
+        </nav>
+
+        <!-- User Section -->
+        <div class="user-section" id="userDropdown" style="display: none;">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-details">
+                    <div class="user-name"></div>
+                    <div class="user-role">Kullanıcı</div>
+                </div>
+            </div>
+            <div class="user-menu">
+                <a href="#" class="user-menu-item" id="profilimBtn">
+                    <i class="fas fa-user"></i>
+                    <span>Profilim</span>
+                </a>
+                <button id="logoutBtn" class="user-menu-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Çıkış Yap</span>
+                </button>
+                <div id="profilimAlert" class="alert alert-warning d-none mt-3 mb-0 p-2 text-center" style="font-size:0.95rem;">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Profilim bölümü demodan dolayı geçici olarak kullanılamıyor.
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Section -->
+        <div id="loginSection" class="auth-section">
+            <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#authModal">
+                <i class="fas fa-sign-in-alt me-2"></i>
+                <span>Giriş Yap</span> / <span>Kayıt Ol</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card bg-dark text-light border-secondary">
+                        <div class="card-body">
+                            <h2 class="card-title text-center mb-4">Resim Yükle</h2>
+                            
+                            <form id="uploadForm" enctype="multipart/form-data">
+                                <!-- Resim Yükleme Alanı -->
+                                <div class="drop-zone mb-4" id="dropZone">
+                                    <input type="file" id="imageInput" name="image" accept="image/*" class="d-none">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <h4>Resminizi Sürükleyin veya Seçin</h4>
+                                    <p class="text-muted">PNG, JPG veya JPEG (Max. 5MB)</p>
+                                </div>
+
+                                <!-- Resim Önizleme -->
+                                <div id="imagePreview" class="text-center mb-4" style="display: none;">
+                                    <div class="preview-container">
+                                        <img id="previewImage" class="img-fluid rounded" alt="Önizleme">
+                                        <button type="button" class="btn-remove-image" onclick="removeImage()">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Başlık -->
+                                <div class="mb-3">
+                                    <label for="title" class="form-label">Başlık</label>
+                                    <input type="text" class="form-control" id="title" name="title" required>
+                                </div>
+
+                                <!-- Açıklama -->
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Açıklama</label>
+                                    <textarea class="form-control" id="description" rows="3" required></textarea>
+                                </div>
+
+                                <!-- Fiyat -->
+                                <div class="mb-3">
+                                    <label for="price" class="form-label">Fiyat (₺)</label>
+                                    <input type="number" class="form-control" id="price" min="0" step="0.01" required>
+                                </div>
+
+                                <!-- Lisans Seçenekleri -->
+                                <div class="mb-4">
+                                    <label class="form-label">Lisans Seçenekleri</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="personalLicense" checked>
+                                        <label class="form-check-label" for="personalLicense">
+                                            Kişisel Kullanım
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="commercialLicense">
+                                        <label class="form-check-label" for="commercialLicense">
+                                            Ticari Kullanım (+%50)
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <!-- Gönder Butonu -->
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-upload me-2"></i>
+                                        Satışa Çıkar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="modal fade show" id="authModal" tabindex="-1" aria-modal="true" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-light border-light">
+                <div class="modal-header border-secondary">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#loginTab">Giriş Yap</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#registerTab">Kayıt Ol</a>
+                        </li>
+                    </ul>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="tab-content">
+                        <!-- Login Tab -->
+                        <div class="tab-pane fade show active" id="loginTab">
+                            <form id="loginForm">
+                                <div class="mb-3">
+                                    <label class="form-label">E-posta</label>
+                                    <input type="email" class="form-control bg-dark text-light" id="loginEmail">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Şifre</label>
+                                    <input type="password" class="form-control bg-dark text-light" id="loginSifre">
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Giriş Yap</button>
+                            </form>
+                        </div>
+                        <!-- Register Tab -->
+                        <div class="tab-pane fade" id="registerTab">
+                            <form id="registerForm">
+                                <div class="mb-3">
+                                    <label class="form-label">Ad</label>
+                                    <input type="text" class="form-control bg-dark text-light" id="registerAd">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Soyad</label>
+                                    <input type="text" class="form-control bg-dark text-light" id="registerSoyad">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">E-posta</label>
+                                    <input type="email" class="form-control bg-dark text-light" id="registerEmail">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Şifre</label>
+                                    <input type="password" class="form-control bg-dark text-light" id="registerSifre">
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Kayıt Ol</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="auth.js"></script>
+    <script src="urunekle.js"></script>
+    <script>
+        // Sidebar'da Satın Aldıklarım linkini sadece giriş yapan kullanıcılar görebilsin
+        const satinAldiklarimLink = document.getElementById('satinAldiklarimLink');
+        function toggleSatinAldiklarimLink() {
+            const token = localStorage.getItem('token');
+            if (satinAldiklarimLink) {
+                if (token) {
+                    satinAldiklarimLink.classList.remove('d-none');
+                } else {
+                    satinAldiklarimLink.classList.add('d-none');
+                }
+            }
+        }
+        toggleSatinAldiklarimLink();
+        window.addEventListener('storage', toggleSatinAldiklarimLink);
+    </script>
+</body>
+</html>

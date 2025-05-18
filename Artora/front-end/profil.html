@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profilim - Artora</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body class="bg-dark">
+    <!-- Mobile Toggle Button -->
+    <button class="mobile-toggle d-md-none btn btn-dark border-0">
+        <i class="fas fa-bars fa-lg"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div class="sidebar active">
+        <a href="index.html" class="logo">
+            <img src="img/slack.svg" alt="Artora Logo">
+            <span>Artora</span>
+        </a>
+        <nav class="nav-items">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>Ana Sayfa</span>
+            </a>
+            <a href="about.html" class="nav-link">
+                <i class="fas fa-info-circle"></i>
+                <span>Hakkımızda</span>
+            </a>
+            <a href="resim_galeri.html" class="nav-link">
+                <i class="fas fa-images"></i>
+                <span>Resim Galerisi</span>
+            </a>
+            <a href="cart.html" class="nav-link">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Sepetim</span>
+            </a>
+            <a href="satin_aldiklarim.html" class="nav-link d-none" id="satinAldiklarimLink">
+                <i class="fas fa-download"></i>
+                <span>Satın Aldıklarım</span>
+            </a>
+        </nav>
+        <!-- User Section -->
+        <div class="user-section" id="userDropdown" style="display: none;">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-details">
+                    <div class="user-name"></div>
+                    <div class="user-role">Kullanıcı</div>
+                </div>
+            </div>
+            <div class="user-menu">
+                <a href="#" class="user-menu-item" id="profilimBtn">
+                    <i class="fas fa-user"></i>
+                    <span>Profilim</span>
+                </a>
+                <a href="urunekle.html" class="user-menu-item">
+                    <i class="fas fa-plus"></i>
+                    <span>Resim Ekle</span>
+                </a>
+                <button id="logoutBtn" class="user-menu-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Çıkış Yap</span>
+                </button>
+                <div id="profilimAlert" class="alert alert-warning d-none mt-3 mb-0 p-2 text-center" style="font-size:0.95rem;">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Profilim bölümü demodan dolayı geçici olarak kullanılamıyor.
+                </div>
+            </div>
+        </div>
+        <!-- Login Section -->
+        <div id="loginSection" class="auth-section">
+            <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#authModal">
+                <i class="fas fa-sign-in-alt me-2"></i>
+                <span>Giriş Yap</span> / <span>Kayıt Ol</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container py-5">
+            <!-- Profilim geçici uyarı kutusu -->
+            <div id="profilimAlert" class="alert alert-warning mt-3 mb-0 p-2 text-center" style="font-size:0.95rem;">
+                <i class="fas fa-exclamation-triangle me-2"></i>Profilim bölümü demodan dolayı geçici olarak kullanılamıyor.
+            </div>
+            <!-- Profilim içeriği devre dışı bırakıldı -->
+            <div class="text-center text-light mt-5">
+                <i class="fas fa-user-lock fa-3x mb-3 text-warning"></i>
+                <h2 class="mb-3">Profilim bölümü şu anda devre dışı</h2>
+                <p class="lead">Demo sürümde bu alan kullanılamamaktadır.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+
+    <footer class="bg-dark text-light text-center py-4 mt-5 border-top border-secondary">
+        <div class="container">
+            <p class="mb-0">&copy; 2024 Artora - Resim Alım Satım</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+    <script src="profil.js"></script>
+    <script>
+        // Sidebar'da Satın Aldıklarım linkini sadece giriş yapan kullanıcılar görebilsin
+        const satinAldiklarimLink = document.getElementById('satinAldiklarimLink');
+        function toggleSatinAldiklarimLink() {
+            const token = localStorage.getItem('token');
+            if (satinAldiklarimLink) {
+                if (token) {
+                    satinAldiklarimLink.classList.remove('d-none');
+                } else {
+                    satinAldiklarimLink.classList.add('d-none');
+                }
+            }
+        }
+        toggleSatinAldiklarimLink();
+        window.addEventListener('storage', toggleSatinAldiklarimLink);
+    </script>
+</body>
+</html>
